@@ -1,0 +1,21 @@
+# OS
+.DS_Store
+*.swp
+*.swo
+.vscode
+.idea
+
+# Build
+vendor
+.vendor-new
+node_modules/
+build
+node_modules
+
+# IDE
+.idea/
+*.iml
+
+# Secrets
+.env
+

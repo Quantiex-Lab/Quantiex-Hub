@@ -1,0 +1,62 @@
+{
+  "name": "eth_contracts",
+  "version": "1.1.0",
+  "description": "Dependencies and scripts for Peggy smart contracts",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "big-integer": "^1.6.48",
+    "bignumber.js": "^6.0.0",
+    "bluebird": "^3.5.1",
+    "cross-env": "5.0.5",
+    "dotenv": "^8.1.0",
+    "eth-lib": "^0.2.8",
+    "ethereumjs-util": "^5.2.0",
+    "keccak": "^1.4.0",
+    "lodash": "^4.17.20",
+    "truffle-contract": "^4.0.31",
+    "utf8": "^3.0.0"
+  },
+  "devDependencies": {
+    "@truffle/hdwallet-provider": "^1.0.43",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "ganache-cli": "^6.8.2",
+    "openzeppelin-solidity": "^2.1.3",
+    "truffle": "^5.1.43",
+    "web3": "^1.2.6",
+    "web3-utils": "^1.0.0-beta.52"
+  },
+  "scripts": {
+    "develop": "ganache-cli -i 5777 -p 8558 -m 'gun heart shock viable layer wool near unable tobacco between tuna position'",
+    "migrate": "npx truffle migrate --reset",
+    "eth:abi": "node scripts/formatAbi.js",
+    "eth:address": "npx truffle exec scripts/getBridgeRegistryAddress.js",
+    "eth:validators": "npx truffle exec scripts/getValidators.js",
+    "eth:addValidator": "npx truffle exec scripts/addValidator.js",
+    "eth:hasLocked": "npx truffle exec scripts/hasLockedTokens.js",
+    "eth:getTx": "npx truffle exec scripts/getTxReceipt.js",
+    "eth:setup": "npx truffle exec scripts/setOracleAndBridgeBank.js",
+    "eth:lock": "npx truffle exec scripts/sendLockTx.js",
+    "eth:burn": "npx truffle exec scripts/sendBurnTx.js",
+    "eth:check": "npx truffle exec scripts/sendCheckProphecy.js",
+    "eth:process": "npx truffle exec scripts/sendProcessProphecy.js",
+    "eth:addBridgeToken": "npx truffle exec scripts/sendAddBridgeToken.js",
+    "eth:getTokenBalance": "npx truffle exec scripts/getTokenBalance.js",
+    "eth:getStakingPoolAddress": "npx truffle exec scripts/getStakingPoolAddress.js",
+    "eth:setStakeToken": "npx truffle exec scripts/setStakeToken.js",
+    "eth:getStakeToken": "npx truffle exec scripts/getStakeTokenAddress.js",
+    "eth:sendStakeTx": "npx truffle exec scripts/sendStakeTx.js",
+    "eth:getStakeWeight": "npx truffle exec scripts/getStakeWeight.js",
+    "eth:sendRevokeTx": "npx truffle exec scripts/sendRevokeTx.js",
+    "eth:sendTransferTx": "npx truffle exec scripts/transfer.js",
+    "ethtoken:address": "npx truffle exec scripts/getTokenContractAddress.js",
+    "ethtoken:mint": "npx truffle exec scripts/mintTestTokens.js",
+    "ethtoken:approve": "npx truffle exec scripts/sendApproveTx.js"
+  }
+}
