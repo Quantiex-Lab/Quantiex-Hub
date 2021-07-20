@@ -10,16 +10,21 @@ const (
 	Valset
 	// Oracle enables validators to make OracleClaims and processes ProphecyClaims
 	Oracle
-	// QuantiexBridge enables validators to make ProphecyClaims
-	QuantiexBridge
-	// BridgeBank manages protocol assets on both Ethereum and Binance
-	BridgeBank
+	// QuantiexERC20Bridge enables validators to make ProphecyClaims
+	QuantiexERC20Bridge
+	// QuantiexERC721Bridge enables validators to make ProphecyClaims
+	QuantiexERC721Bridge
+	// BridgeERC20Bank manages protocol assets on both Ethereum and Binance
+	BridgeERC20Bank
+	// BridgeERC721Bank manages protocol assets on both Ethereum and Binance
+	BridgeERC721Bank
 	// StakingPool manages staking assets
 	StakingPool
 )
 
 // BridgeContractToString returns the string associated with a BridgeContract
-var BridgeContractToString = [...]string{"BridgeRegistry", "Valset", "Oracle", "QuantiexBridge", "BridgeBank", "StakingPool"}
+var BridgeContractToString = [...]string{"BridgeRegistry", "Valset", "Oracle", "QuantiexERC20Bridge", "QuantiexERC721Bridge",
+	"BridgeERC20Bank", "BridgeERC721Bank", "StakingPool"}
 
 // String returns the BridgeContract as a string
 func (d BridgeContract) String() string {
@@ -35,8 +40,10 @@ func LoadBridgeContracts() BridgeContracts {
 		BridgeRegistry,
 		Valset,
 		Oracle,
-		QuantiexBridge,
-		BridgeBank,
+		QuantiexERC20Bridge,
+		QuantiexERC721Bridge,
+		BridgeERC20Bank,
+		BridgeERC721Bank,
 		StakingPool,
 	}
 }

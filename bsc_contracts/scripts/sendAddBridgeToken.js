@@ -8,7 +8,7 @@ module.exports = async () => {
   // Contract abstraction
   const truffleContract = require("truffle-contract");
   const contract = truffleContract(
-    require("../build/contracts/BridgeBank.json")
+    require("../build/contracts/BridgeERC20Bank.json")
   );
   /*******************************************
    *** Constants
@@ -53,7 +53,7 @@ module.exports = async () => {
   }
   const web3 = new Web3(provider);
 
-  console.log("Fetching BridgeBank contract...");
+  console.log("Fetching BridgeERC20Bank contract...");
   contract.setProvider(web3.currentProvider);
   try {
     /*******************************************

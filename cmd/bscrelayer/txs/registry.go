@@ -21,15 +21,19 @@ const (
 	Valset ContractRegistry = iota + 1
 	// Oracle bsccontract
 	Oracle
-	// BridgeBank bridgeBank bsccontract
-	BridgeBank
-	// QuantiexBridge quantiexBridge bsccontract
-	QuantiexBridge
+	// BridgeERC20Bank bridgeBank bsccontract
+	BridgeERC20Bank
+	// BridgeERC721Bank bridgeBank bsccontract
+	BridgeERC721Bank
+	// QuantiexERC20Bridge quantiexBridge bsccontract
+	QuantiexERC20Bridge
+	// QuantiexERC721Bridge quantiexBridge bsccontract
+	QuantiexERC721Bridge
 )
 
 // String returns the event type as a string
 func (d ContractRegistry) String() string {
-	return [...]string{"valset", "oracle", "bridgebank", "binancebridge"}[d-1]
+	return [...]string{"valset", "oracle", "bridgeerc20bank", "bridgeerc721bank", "quantiexerc20bridge", "quantiexerc721bridge"}[d-1]
 }
 
 // GetAddressFromBridgeRegistry queries the requested bsccontract address from the BridgeRegistry bsccontract
@@ -66,10 +70,14 @@ func GetAddressFromBridgeRegistry(client *ethclient.Client, registry common.Addr
 		address, err = registryInstance.Valset(&auth)
 	case Oracle:
 		address, err = registryInstance.Oracle(&auth)
-	case BridgeBank:
-		address, err = registryInstance.BridgeBank(&auth)
-	case QuantiexBridge:
-		address, err = registryInstance.QuantiexBridge(&auth)
+	case BridgeERC20Bank:
+		address, err = registryInstance.BridgeERC20Bank(&auth)
+	case BridgeERC721Bank:
+		address, err = registryInstance.BridgeERC721Bank(&auth)
+	case QuantiexERC20Bridge:
+		address, err = registryInstance.QuantiexERC20Bridge(&auth)
+	case QuantiexERC721Bridge:
+		address, err = registryInstance.QuantiexERC721Bridge(&auth)
 	default:
 		panic("invalid target bsccontract address")
 	}

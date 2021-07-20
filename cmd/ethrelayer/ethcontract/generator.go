@@ -35,7 +35,9 @@ func CompileContracts(contracts BridgeContracts) error {
 	for _, ethcontract := range contracts {
 		// Construct generic BIN/ABI generation cmd with ethcontract's directory path and name
 		baseDirectory := ""
-		if ethcontract.String() == BridgeBank.String() {
+		if ethcontract.String() == BridgeERC20Bank.String() {
+			baseDirectory = ethcontract.String() + "/"
+		} else if ethcontract.String() == BridgeERC721Bank.String() {
 			baseDirectory = ethcontract.String() + "/"
 		}
 		dirABIBINGenCmd := strings.Replace(BaseABIBINGenCmd, DirectoryText, baseDirectory, -1)

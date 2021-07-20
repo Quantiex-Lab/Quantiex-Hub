@@ -11,7 +11,7 @@ module.exports = async () => {
       require("../build/contracts/StakingPool.json")
   );
   const tokenContract = truffleContract(
-      require("../build/contracts/BridgeToken.json")
+      require("../build/contracts/BridgeERC20Token.json")
   );
 
   const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";

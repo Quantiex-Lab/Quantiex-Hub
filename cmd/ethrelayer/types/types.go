@@ -27,13 +27,14 @@ const (
 
 // String returns the event type as a string
 func (d Event) String() string {
-	return [...]string{"unsupported", "burn", "lock", "LogLock", "LogBurn", "LogNewProphecyClaim"}[d]
+	return [...]string{"unsupported", "burn", "lock", "LogLock",
+		"LogBurn", "LogNewProphecyClaim"}[d]
 }
 
-// EthereumEvent struct is used by LogLock and LogBurn
-type EthereumEvent struct {
-	EthereumChainID       *big.Int
-	BridgeContractAddress common.Address
+// EthereumERC20Event struct is used by LogLock and LogBurn
+type EthereumERC20Event struct {
+	ChainID               *big.Int
+	BankAddress           common.Address
 	ID                    [32]byte
 	ChainName             string
 	From                  common.Address
@@ -46,31 +47,117 @@ type EthereumEvent struct {
 }
 
 // String implements fmt.Stringer
-func (e EthereumEvent) String() string {
-	return fmt.Sprintf("\nChain ID: %v\nBridge ethcontract address: %v\nToken symbol: %v\nToken "+
-		"ethcontract address: %v\nSender: %v\nRecipient: %v\nValue: %v\nNonce: %v\nClaim type: %v",
-		e.EthereumChainID, e.BridgeContractAddress.Hex(), e.Symbol, e.Token.Hex(), e.From.Hex(),
-		e.To.Hex(), e.Value, e.Nonce, e.ClaimType.String())
+func (e EthereumERC20Event) String() string {
+	return fmt.Sprintf("\nChainID: %v\nERC20BankAddress: %v\nChainName: %v\nSymbol: %v\nFrom %v"+
+		"To: %v\nToken: %v\nValue: %v\nNonce: %v\nClaim type: %v",
+		e.ChainID,
+		e.BankAddress.Hex(),
+		e.ChainName,
+		e.Symbol,
+		e.From.Hex(),
+		e.To.Hex(),
+		e.Token.Hex(),
+		e.Value,
+		e.Nonce,
+		e.ClaimType.String())
 }
 
-// ProphecyClaimEvent struct which represents a LogNewProphecyClaim event
-type ProphecyClaimEvent struct {
-	ChainName          string
-	BinanceSender     common.Address
-	Symbol           string
+// ProphecyClaimERC20Event struct which represents a LogNewProphecyClaim event
+type ProphecyClaimERC20Event struct {
 	ProphecyID       *big.Int
-	Amount           *big.Int
+	ChainName        string
+	ClaimType        uint8
+	BinanceSender    common.Address
 	EthereumReceiver common.Address
 	ValidatorAddress common.Address
 	TokenAddress     common.Address
-	ClaimType        uint8
+	Symbol           string
+	Amount           *big.Int
 	TxHash           string
 }
 
 // String implements fmt.Stringer
-func (p ProphecyClaimEvent) String() string {
-	return fmt.Sprintf("\nProphecy ID: %v\nClaim Type: %v\nSender: %v\n"+
-		"Recipient: %v\nSymbol: %v\nToken: %v\nAmount: %v\nValidator: %v\nTxHash: %v\n\n",
-		p.ProphecyID, p.ClaimType, p.BinanceSender.Hex(), p.EthereumReceiver.Hex(),
-		p.Symbol, p.TokenAddress.Hex(), p.Amount, p.ValidatorAddress.Hex(), p.TxHash)
+func (p ProphecyClaimERC20Event) String() string {
+	return fmt.Sprintf("\nProphecyID: %v\nChainName: %v\nClaimType: %v\nBinanceSender: %v\n" +
+		"EthereumReceiver: %v\nValidatorAddress: %v\nSymbol: %v\nTokenAddress: %v\nAmount: %v\nTxHash: %v\n\n",
+		p.ProphecyID,
+		p.ChainName,
+		p.ClaimType,
+		p.BinanceSender.Hex(),
+		p.EthereumReceiver.Hex(),
+		p.ValidatorAddress.Hex(),
+		p.TokenAddress.Hex(),
+		p.Symbol,
+		p.Amount,
+		p.TxHash)
+}
+
+
+
+
+// EthereumERC721Event struct is used by LogLock and LogBurn
+type EthereumERC721Event struct {
+	ChainID			*big.Int
+	BankAddress	    common.Address
+	ClaimType		xcommon.ClaimType
+	ChainName		string
+	From			common.Address
+	To				common.Address
+	Token			common.Address
+	Symbol			string
+	TokenId			*big.Int
+	BaseURI			string
+	TokenURI		string
+	Nonce			*big.Int
+}
+
+// String implements fmt.Stringer
+func (e EthereumERC721Event) String() string {
+	return fmt.Sprintf("\nChainID: %v\nERC721BankAddress: %v\nClaimType: %v\nChainName: %v\n" +
+		"Sender: %v\nRecipient: %v\nToken: %v\nSymbol: %v\nTokenId: %v\nBaseURI: %v\nTokenURI: %v\nNonce: %v\n\n",
+		e.ChainID,
+		e.BankAddress.Hex(),
+		e.ClaimType.String(),
+		e.ChainName,
+		e.From.Hex(),
+		e.To.Hex(),
+		e.Token.Hex(),
+		e.Symbol,
+		e.TokenId,
+		e.BaseURI,
+		e.TokenURI,
+		e.Nonce,
+	)
+}
+
+// ProphecyClaimERC721Event struct which represents a LogNewProphecyClaim event
+type ProphecyClaimERC721Event struct {
+	ProphecyID       *big.Int
+	ChainName        string
+	ClaimType        uint8
+	BinanceSender    common.Address
+	EthereumReceiver common.Address
+	ValidatorAddress common.Address
+	TokenAddress     common.Address
+	Symbol           string
+	TokenId          *big.Int
+	TokenURI         string
+	TxHash           string
+}
+
+// String implements fmt.Stringer
+func (p ProphecyClaimERC721Event) String() string {
+	return fmt.Sprintf("ProphecyID: %v\nChainName: %v\nClaimType: %v\nBinanceSender: %v\nEthereumReceiver: %v\n" +
+		"ValidatorAddress: %v\nTokenAddress: %v\nSymbol: %v\nTokenId: %v\nTokenURI: %v\nTxHash: %v\n\n",
+		p.ProphecyID,
+		p.ChainName,
+		p.ClaimType,
+		p.BinanceSender.Hex(),
+		p.EthereumReceiver.Hex(),
+		p.ValidatorAddress.Hex(),
+		p.TokenAddress.Hex(),
+		p.Symbol,
+		p.TokenId,
+		p.TokenURI,
+		p.TxHash)
 }

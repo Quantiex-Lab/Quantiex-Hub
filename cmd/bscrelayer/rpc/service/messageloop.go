@@ -11,7 +11,8 @@ import (
 type msgType int
 
 const (
-	relayProphecyClaim msgType = iota
+	relayERC20ProphecyClaim msgType = iota
+	relayERC721ProphecyClaim
 )
 
 var mgr *messageMgr
@@ -43,19 +44,32 @@ func (m *messageMgr) messageLoop() {
 				return
 			}
 			switch msg.op {
-			case relayProphecyClaim:
-				glog.Info("message loop msg: relayProphecyClaim")
+			case relayERC20ProphecyClaim:
+				glog.Info("message loop msg: relayERC20ProphecyClaim")
 				if msg.param == nil {
-					glog.Info("relayProphecyClaim param nil")
+					glog.Info("relayERC20ProphecyClaim param nil")
 					continue
 				}
 
-				pc, ok := msg.param.(*xcommon.EthProphecyClaim)
+				pc, ok := msg.param.(*xcommon.EthERC20ProphecyClaim)
 				if !ok {
 					glog.Info("addPubChan param err")
 					continue
 				}
-				m.handleRelayProphecyClaimMsg(pc)
+				m.handleRelayERC20ProphecyClaimMsg(pc)
+			case relayERC721ProphecyClaim:
+				glog.Info("message loop msg: relayERC721ProphecyClaim")
+				if msg.param == nil {
+					glog.Info("relayERC721ProphecyClaim param nil")
+					continue
+				}
+
+				pc, ok := msg.param.(*xcommon.EthERC721ProphecyClaim)
+				if !ok {
+					glog.Info("addPubChan param err")
+					continue
+				}
+				m.handleRelayERC721ProphecyClaimMsg(pc)
 			}
 		}
 	}
@@ -65,18 +79,29 @@ func (m *messageMgr) isLoopExit() bool {
 	return m.msgChan == nil
 }
 
-func RelayProphecyClaim(prophecyClaim *xcommon.EthProphecyClaim) {
+func RelayERC20ProphecyClaim(prophecyClaim *xcommon.EthERC20ProphecyClaim) {
 	if mgr.isLoopExit() {
-		glog.Errorf("channel is close, relayProphecyClaim msg not implement")
+		glog.Errorf("channel is close, relayERC20ProphecyClaim msg not implement")
 		return
 	}
 	glog.Infof("RelayProphecyClaim prophecyClaim is:%+v", prophecyClaim)
 
-	mgr.msgChan <- &message{op: relayProphecyClaim, param: prophecyClaim}
+	mgr.msgChan <- &message{op: relayERC20ProphecyClaim, param: prophecyClaim}
 	return
 }
 
-func (m *messageMgr) handleRelayProphecyClaimMsg(prophecyClaim *xcommon.EthProphecyClaim) {
+func RelayERC721ProphecyClaim(prophecyClaim *xcommon.EthERC721ProphecyClaim) {
+	if mgr.isLoopExit() {
+		glog.Errorf("channel is close, EthERC721ProphecyClaim msg not implement")
+		return
+	}
+	glog.Infof("RelayProphecyClaim prophecyClaim is:%+v", prophecyClaim)
+
+	mgr.msgChan <- &message{op: relayERC721ProphecyClaim, param: prophecyClaim}
+	return
+}
+
+func (m *messageMgr) handleRelayERC20ProphecyClaimMsg(prophecyClaim *xcommon.EthERC20ProphecyClaim) {
 	if m.isLoopExit() {
 		glog.Errorf("channel is close, handleRelayProphecyClaimMsg msg not implement")
 		return
@@ -89,12 +114,33 @@ func (m *messageMgr) handleRelayProphecyClaimMsg(prophecyClaim *xcommon.EthProph
 		claimType = types.MsgBurn
 	}
 
-	err := txs.RelayProphecyClaimToBinance(m.sub.BscProvider, m.sub.RegistryContractAddress,
+	err := txs.RelayERC20ProphecyClaimToBinance(m.sub.BscProvider, m.sub.RegistryContractAddress,
 		claimType, *prophecyClaim, m.sub.PrivateKey)
 	if err != nil {
 		glog.Errorf("handleRelayProphecyClaimMsg err:%+v", err)
 		return
 	}
 
+	return
+}
+
+func (m *messageMgr) handleRelayERC721ProphecyClaimMsg(prophecyClaim *xcommon.EthERC721ProphecyClaim) {
+	if m.isLoopExit() {
+		glog.Errorf("channel is close, handleRelayProphecyClaimMsg msg not implement")
+		return
+	}
+
+	var claimType types.Event
+	if prophecyClaim.ClaimType == xcommon.LockText {
+		claimType = types.MsgLock
+	} else if prophecyClaim.ClaimType == xcommon.BurnText {
+		claimType = types.MsgBurn
+	}
+	err := txs.RelayERC721ProphecyClaimToBinance(m.sub.BscProvider, m.sub.RegistryContractAddress,
+		claimType, *prophecyClaim, m.sub.PrivateKey)
+	if err != nil {
+		glog.Errorf("handleRelayProphecyClaimMsg err:%+v", err)
+		return
+	}
 	return
 }
