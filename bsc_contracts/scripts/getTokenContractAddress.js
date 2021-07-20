@@ -8,8 +8,11 @@ module.exports = async () => {
 
   // Contract abstraction
   const truffleContract = require("truffle-contract");
-  const contract = truffleContract(
-    require("../build/contracts/BridgeToken.json")
+  const erc20Contract = truffleContract(
+    require("../build/contracts/BridgeERC20Token.json")
+  );
+  const erc721Contract = truffleContract(
+      require("../build/contracts/BridgeERC721Token.json")
   );
 
   /*******************************************
@@ -35,14 +38,21 @@ module.exports = async () => {
   }
 
   const web3 = new Web3(provider);
-  contract.setProvider(web3.currentProvider);
+  erc20Contract.setProvider(web3.currentProvider);
+  erc721Contract.setProvider(web3.currentProvider);
 
   /*******************************************
    *** Contract interaction
    ******************************************/
-  const address = await contract.deployed().then(function(instance) {
+  const erc20Address = await erc20Contract.deployed().then(function(instance) {
     return instance.address;
   });
+  console.log("Token erc20Contract address: ", erc20Address);
 
-  return console.log("Token contract address: ", address);
+  const erc721Address = await erc721Contract.deployed().then(function(instance) {
+    return instance.address;
+  });
+  console.log("Token erc721Contract address: ", erc721Address);
+
+  return true;
 };

@@ -17,8 +17,10 @@ import (
 
 // File paths to Peggy smart ethcontract ABIs
 const (
-	BridgeBankABI   = "/generated/abi/BridgeBank/BridgeBank.abi"
-	QuantiexBridgeABI = "/generated/abi/QuantiexBridge/QuantiexBridge.abi"
+	BridgeERC20BankABI   = "/generated/abi/BridgeERC20Bank/BridgeERC20Bank.abi"
+	BridgeERC721BankABI   = "/generated/abi/BridgeERC721Bank/BridgeERC721Bank.abi"
+	QuantiexERC20BridgeABI = "/generated/abi/QuantiexERC20Bridge/QuantiexERC20Bridge.abi"
+	QuantiexERC721BridgeABI = "/generated/abi/QuantiexERC721Bridge/QuantiexERC721Bridge.abi"
 )
 
 // LoadABI loads a smart ethcontract as an abi.ABI
@@ -30,10 +32,14 @@ func LoadABI(contractType txs.ContractRegistry) abi.ABI {
 
 	var filePath string
 	switch contractType {
-	case txs.QuantiexBridge:
-		filePath = QuantiexBridgeABI
-	case txs.BridgeBank:
-		filePath = BridgeBankABI
+	case txs.QuantiexERC20Bridge:
+		filePath = QuantiexERC20BridgeABI
+	case txs.QuantiexERC721Bridge:
+		filePath = QuantiexERC721BridgeABI
+	case txs.BridgeERC20Bank:
+		filePath = BridgeERC20BankABI
+	case txs.BridgeERC721Bank:
+		filePath = BridgeERC721BankABI
 	}
 
 	// Read the file containing the ethcontract's ABI

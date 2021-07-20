@@ -5,7 +5,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/joho/godotenv"
-
 	"log"
 	"os"
 	"strings"
@@ -53,16 +52,37 @@ func LoadBscSender() (address common.Address, err error) {
 	return outAddress, nil
 }
 
-// GenerateClaimMessage Generates a hashed message containing a ProphecyClaim event's data
-func GenerateClaimMessage(event types.ProphecyClaimEvent) []byte {
+// GenerateERC20ClaimMessage Generates a hashed message containing a ProphecyClaim event's data
+func GenerateERC20ClaimMessage(event types.ProphecyClaimERC20Event) []byte {
 	prophecyID := Int256(event.ProphecyID)
-	sender := String(event.EthereumSender)
-	recipient := Int256(event.BinanceReceiver.Hex())
+	claimType := Uint8(event.ClaimType)
+	sender := String(event.EthereumSender.Hex())
+	recipient := String(event.BinanceReceiver.Hex())
+	validator := String(event.ValidatorAddress.Hex())
 	token := String(event.TokenAddress.Hex())
+	symbol := String(event.Symbol)
 	amount := Int256(event.Amount)
+	txHash := String(event.TxHash)
 
 	// Generate claim message using ProphecyClaim data
-	return SoliditySHA3(prophecyID, sender, recipient, token, amount)
+	return SoliditySHA3(prophecyID, claimType, sender, recipient, validator, token, symbol, amount, txHash)
+}
+
+// GenerateERC721ClaimMessage Generates a hashed message containing a ProphecyClaim event's data
+func GenerateERC721ClaimMessage(event types.ProphecyClaimERC721Event) []byte {
+	prophecyID := Int256(event.ProphecyID)
+	claimType := Uint8(event.ClaimType)
+	sender := String(event.EthereumSender.Hex())
+	recipient := Int256(event.BinanceReceiver.Hex())
+	validator := Int256(event.ValidatorAddress.Hex())
+	token := String(event.TokenAddress.Hex())
+	symbol := String(event.Symbol)
+	tokenId := Int256(event.TokenId)
+	tokenURI := String(event.TokenURI)
+	txHash := String(event.TxHash)
+
+	// Generate claim message using ProphecyClaim data
+	return SoliditySHA3(prophecyID, claimType, sender, recipient, validator, token, symbol, tokenId, tokenURI, txHash)
 }
 
 // PrefixMsg prefixes a message for verification, mimics behavior of web3.eth.sign

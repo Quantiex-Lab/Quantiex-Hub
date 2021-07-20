@@ -2,7 +2,8 @@ pragma solidity ^0.5.0;
 
 import "../../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Valset.sol";
-import "./QuantiexBridge.sol";
+import "./QuantiexERC20Bridge.sol";
+import "./QuantiexERC721Bridge.sol";
 import "./StakingPool.sol";
 
 
@@ -12,7 +13,8 @@ contract Oracle {
     /*
      * @dev: Public variable declarations
      */
-    QuantiexBridge public quantiexBridge;
+    QuantiexERC20Bridge public quantiexERC20Bridge;
+    QuantiexERC721Bridge public quantiexERC721Bridge;
     StakingPool public stakingPool;
     Valset public valset;
     address public operator;
@@ -62,10 +64,14 @@ contract Oracle {
      * @dev: Modifier to restrict access to current ValSet validators
      */
     modifier isPending(uint256 _prophecyID) {
-        require(
-            quantiexBridge.isProphecyClaimActive(_prophecyID) == true,
-            "The prophecy must be pending for this operation"
-        );
+        if (_prophecyID % 2 == 0)
+        {
+            require(quantiexERC20Bridge.isProphecyClaimActive(_prophecyID) == true,
+                "The prophecy must be pending for this operation");
+        } else {
+            require(quantiexERC721Bridge.isProphecyClaimActive(_prophecyID) == true,
+                "The prophecy must be pending for this operation");
+        }
         _;
     }
 
@@ -75,7 +81,8 @@ contract Oracle {
     constructor(
         address _operator,
         address _valset,
-        address _quantiexBridge,
+        address _quantiexERC20Bridge,
+        address _quantiexERC721Bridge,
         address _stakingPool,
         uint256 _consensusThreshold
     ) public {
@@ -84,7 +91,8 @@ contract Oracle {
             "Consensus threshold must be positive."
         );
         operator = _operator;
-        quantiexBridge = QuantiexBridge(_quantiexBridge);
+        quantiexERC20Bridge = QuantiexERC20Bridge(_quantiexERC20Bridge);
+        quantiexERC721Bridge = QuantiexERC721Bridge(_quantiexERC721Bridge);
         valset = Valset(_valset);
         stakingPool = StakingPool(_stakingPool);
         consensusThreshold = _consensusThreshold;
@@ -185,10 +193,6 @@ contract Oracle {
         isPending(_prophecyID)
         returns (bool, uint256, uint256)
     {
-        require(
-            quantiexBridge.isProphecyClaimActive(_prophecyID) == true,
-            "Can only check active prophecies"
-        );
         return getProphecyThreshold(_prophecyID);
     }
 
@@ -238,9 +242,14 @@ contract Oracle {
     /*
      * @dev: completeProphecy
      *       Completes a prophecy by completing the corresponding BridgeClaim
-     *       on the QuantiexBridge.
+     *       on the QuantiexERC20Bridge.
      */
     function completeProphecy(uint256 _prophecyID) internal {
-        quantiexBridge.completeProphecyClaim(_prophecyID);
+        if (_prophecyID % 2 == 0)
+        {
+            quantiexERC20Bridge.completeProphecyClaim(_prophecyID);
+        } else {
+            quantiexERC721Bridge.completeProphecyClaim(_prophecyID);
+        }
     }
 }

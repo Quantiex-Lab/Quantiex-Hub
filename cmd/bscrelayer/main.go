@@ -99,13 +99,13 @@ func RunInitRelayerCmd(cmd *cobra.Command, args []string) error {
 	if !bsccommon.IsHexAddress(args[1]) {
 		return errors.Errorf("invalid [bridge-registry-bsccontract-address]: %s", args[1])
 	}
-	bscContractAddress := bsccommon.HexToAddress(args[1])
+	registryContractAddress := bsccommon.HexToAddress(args[1])
 
 	// Universal logger
 	logger := tmLog.NewTMLogger(tmLog.NewSyncWriter(os.Stdout))
 
 	// Initialize new Binance event listener
-	binanceSub := relayer.NewBinanceSub(web3Provider, bscContractAddress, privateKey, logger)
+	binanceSub := relayer.NewBinanceSub(web3Provider, registryContractAddress, privateKey, logger)
 
 	// 启动http服务
 	service.StartHttpServer(&binanceSub)

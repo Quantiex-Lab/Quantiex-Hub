@@ -100,12 +100,12 @@ func RunInitRelayerCmd(cmd *cobra.Command, args []string) error {
 	if !common.IsHexAddress(args[1]) {
 		return errors.Errorf("invalid [bridge-registry-ethcontract-address]: %s", args[1])
 	}
-	ethContractAddress := common.HexToAddress(args[1])
+	registryContractAddress := common.HexToAddress(args[1])
 
 	// Universal logger
 	logger := tmLog.NewTMLogger(tmLog.NewSyncWriter(os.Stdout))
 
-	ethSub, err := relayer.NewEthereumSub(web3Provider, ethContractAddress, privateKey, logger)
+	ethSub, err := relayer.NewEthereumSub(web3Provider, registryContractAddress, privateKey, logger)
 	if err != nil {
 		return err
 	}

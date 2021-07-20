@@ -15,6 +15,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
 	"os"
+	"strings"
 
 	xcommon "github.com/Quantiex-Hub/x/common/types"
 	bsccommon "github.com/ethereum/go-ethereum/common"
@@ -60,37 +61,59 @@ func (sub BinanceSub) Start() {
 	//We will check logs for new events
 	logs := make(chan ctypes.Log)
 	//Start BridgeBank subscription, prepare bsccontract ABI and LockLog event signature
-	bridgeBankAddress, subBridgeBank := sub.startContractEventSub(logs, client, txs.BridgeBank)
-	bridgeBankContractABI := bsccontract.LoadABI(txs.BridgeBank)
-	eventLogLockSignature := bridgeBankContractABI.Events[types.LogLock.String()].ID.Hex()
-	eventLogBurnSignature := bridgeBankContractABI.Events[types.LogBurn.String()].ID.Hex()
+	bridgeERC20BankAddress, subBridgeERC20Bank := sub.startContractEventSub(logs, client, txs.BridgeERC20Bank)
+	bridgeERC20BankContractABI := bsccontract.LoadABI(txs.BridgeERC20Bank)
+	eventLogERC20LockSignature := bridgeERC20BankContractABI.Events[types.LogLock.String()].ID.Hex()
+	eventLogERC20BurnSignature := bridgeERC20BankContractABI.Events[types.LogBurn.String()].ID.Hex()
 
 	// Start QuantiexBridge subscription, prepare ethcontract ABI and LogNewProphecyClaim event signature
-	quantiexBridgeAddress, subQuantiexBridge := sub.startContractEventSub(logs, client, txs.QuantiexBridge)
-	quantiexBridgeContractABI := bsccontract.LoadABI(txs.QuantiexBridge)
-	eventLogNewProphecyClaimSignature := quantiexBridgeContractABI.Events[types.LogNewProphecyClaim.String()].ID.Hex()
+	_, subQuantiexERC20Bridge := sub.startContractEventSub(logs, client, txs.QuantiexERC20Bridge)
+	quantiexERC20BridgeContractABI := bsccontract.LoadABI(txs.QuantiexERC20Bridge)
+	eventLogERC20NewProphecyClaimSignature := quantiexERC20BridgeContractABI.Events[types.LogNewProphecyClaim.String()].ID.Hex()
+
+	// Start BridgeERC721Bank subscription, prepare ethcontract ABI and LockLog event signature
+	bridgeERC721BankAddress, subBridgeERC721Bank := sub.startContractEventSub(logs, client, txs.BridgeERC721Bank)
+	bridgeERC721BankContractABI := bsccontract.LoadABI(txs.BridgeERC721Bank)
+	eventLogERC721LockSignature := bridgeERC721BankContractABI.Events[types.LogLock.String()].ID.Hex()
+	eventLogERC721BurnSignature := bridgeERC721BankContractABI.Events[types.LogBurn.String()].ID.Hex()
+
+	// Start QuantiexERC721Bridge subscription, prepare ethcontract ABI and LogNewProphecyClaim event signature
+	_, subQuantiexERC721Bridge := sub.startContractEventSub(logs, client, txs.QuantiexERC721Bridge)
+	quantiexERC721BridgeContractABI := bsccontract.LoadABI(txs.QuantiexERC721Bridge)
+	eventLogERC721NewProphecyClaimSignature := quantiexERC721BridgeContractABI.Events[types.LogNewProphecyClaim.String()].ID.Hex()
 
 	for {
 		select {
 		// Handle any errors
-		case err := <-subBridgeBank.Err():
+		case err := <-subBridgeERC20Bank.Err():
 			sub.Logger.Error(err.Error())
-		case err := <-subQuantiexBridge.Err():
+		case err := <-subQuantiexERC20Bridge.Err():
+			sub.Logger.Error(err.Error())
+		case err := <-subBridgeERC721Bank.Err():
+			sub.Logger.Error(err.Error())
+		case err := <-subQuantiexERC721Bridge.Err():
 			sub.Logger.Error(err.Error())
 		//vLog is raw event data
 		case vLog := <-logs:
 			sub.Logger.Info(fmt.Sprintf("Witnessed tx %s on block %d\n", vLog.TxHash.Hex(), vLog.BlockNumber))
 			var err error
 			switch vLog.Topics[0].Hex() {
-			case eventLogBurnSignature:
-				err = sub.handleBinanceEvent(clientChainID, bridgeBankAddress, bridgeBankContractABI,
+			case eventLogERC20BurnSignature:
+				err = sub.handleERC20BinanceEvent(clientChainID, bridgeERC20BankAddress, bridgeERC20BankContractABI,
 					types.LogBurn.String(), vLog)
-			case eventLogLockSignature:
-				err = sub.handleBinanceEvent(clientChainID, bridgeBankAddress, bridgeBankContractABI,
+			case eventLogERC20LockSignature:
+				err = sub.handleERC20BinanceEvent(clientChainID, bridgeERC20BankAddress, bridgeERC20BankContractABI,
 					types.LogLock.String(), vLog)
-			case eventLogNewProphecyClaimSignature:
-				err = sub.handleLogNewProphecyClaim(quantiexBridgeAddress, quantiexBridgeContractABI,
-					types.LogNewProphecyClaim.String(), vLog)
+			case eventLogERC20NewProphecyClaimSignature:
+				err = sub.handleLogERC20NewProphecyClaim(quantiexERC20BridgeContractABI, types.LogNewProphecyClaim.String(), vLog)
+			case eventLogERC721BurnSignature:
+				err = sub.handleERC721BinanceEvent(clientChainID, bridgeERC721BankAddress, bridgeERC721BankContractABI,
+					types.LogBurn.String(), vLog)
+			case eventLogERC721LockSignature:
+				err = sub.handleERC721BinanceEvent(clientChainID, bridgeERC721BankAddress, bridgeERC721BankContractABI,
+					types.LogLock.String(), vLog)
+			case eventLogERC721NewProphecyClaimSignature:
+				err = sub.handleLogERC721NewProphecyClaim(quantiexERC721BridgeContractABI,types.LogNewProphecyClaim.String(), vLog)
 			}
 			// TODO: Check local events store for status, if retryable, attempt relay again
 			if err != nil {
@@ -113,7 +136,6 @@ func (sub BinanceSub) startContractEventSub(logs chan ctypes.Log, client *ethcli
 	subQuery := ethereum.FilterQuery{
 		Addresses: []common.Address{subContractAddress},
 	}
-	println(&subQuery)
 
 	// Start the bsccontract subscription
 	contractSub, err := client.SubscribeFilterLogs(context.Background(), subQuery, logs)
@@ -126,16 +148,16 @@ func (sub BinanceSub) startContractEventSub(logs chan ctypes.Log, client *ethcli
 }
 
 // handleEthereumEvent unpacks an Ethereum event, converts it to a ProphecyClaim, and relays a tx to Binance
-func (sub BinanceSub) handleBinanceEvent(clientChainID *big.Int, contractAddress common.Address,
+func (sub BinanceSub) handleERC20BinanceEvent(clientChainID *big.Int, bridgeBankAddress common.Address,
 	contractABI abi.ABI, eventName string, cLog ctypes.Log) error {
 	// Parse the event's attributes via bsccontract ABI
-	event := types.BinanceEvent{}
+	event := types.BinanceERC20Event{}
 	err := contractABI.Unpack(&event, eventName, cLog.Data)
 	if err != nil {
 		sub.Logger.Error("error unpacking: %v", err)
 	}
-	event.BridgeContractAddress = contractAddress
-	event.BinanceChainID = clientChainID
+	event.BridgeBankAddress = bridgeBankAddress
+	event.ChainID = clientChainID
 
 	if eventName == types.LogBurn.String() {
 		event.ClaimType = xcommon.BurnText
@@ -146,9 +168,9 @@ func (sub BinanceSub) handleBinanceEvent(clientChainID *big.Int, contractAddress
 
 	// Add the event to the record
 	txHash := cLog.TxHash.Hex()
-	types.NewEventWrite(txHash, event)
+	types.NewERC20EventWrite(txHash, event)
 
-	prophecyClaim := xcommon.BscProphecyClaim{
+	prophecyClaim := xcommon.BscERC20ProphecyClaim{
 		ChainName:        event.ChainName,
 		ClaimType:        event.ClaimType,
 		BinanceSender:     xcommon.NewBinanceAddress(event.From.Hex()),
@@ -159,7 +181,7 @@ func (sub BinanceSub) handleBinanceEvent(clientChainID *big.Int, contractAddress
 	}
 
 	//send claim to EthRelayer
-	_, err = client.SendProphecyClaimToEthereum(prophecyClaim)
+	_, err = client.SendERC20ProphecyClaimToEthereum(prophecyClaim)
 	if err != nil {
 		return err
 	}
@@ -168,20 +190,90 @@ func (sub BinanceSub) handleBinanceEvent(clientChainID *big.Int, contractAddress
 }
 
 // Unpacks a handleLogNewProphecyClaim event, builds a new OracleClaim, and relays it to Ethereum
-func (sub BinanceSub) handleLogNewProphecyClaim(contractAddress common.Address, contractABI abi.ABI,
-	eventName string, cLog ctypes.Log) error {
+func (sub BinanceSub) handleLogERC20NewProphecyClaim(contractABI abi.ABI, eventName string,
+	cLog ctypes.Log) error {
 	// Parse the event's attributes via ethcontract ABI
-	event := types.ProphecyClaimEvent{}
+	event := types.ProphecyClaimERC20Event{}
 	err := contractABI.Unpack(&event, eventName, cLog.Data)
 	if err != nil {
 		sub.Logger.Error("error unpacking: %v", err)
 	}
 	sub.Logger.Info(event.String())
 
-	oracleClaim, err := txs.ProphecyClaimToSignedOracleClaim(event, sub.PrivateKey)
+	oracleClaim, err := txs.ERC20ProphecyClaimToSignedOracleClaim(event, sub.PrivateKey)
 	if err != nil {
 		return err
 	}
-	return txs.RelayOracleClaimToBinance(sub.BscProvider, contractAddress, types.LogNewProphecyClaim,
+	//return txs.RelayOracleClaimToBinance(sub.BscProvider, contractAddress, types.LogNewProphecyClaim,
+	//	oracleClaim, sub.PrivateKey)
+	return txs.RelayOracleClaimToBinance(sub.BscProvider, sub.RegistryContractAddress, types.LogNewProphecyClaim,
+		oracleClaim, sub.PrivateKey)
+}
+
+// handleEthereumEvent unpacks an Ethereum event, converts it to a ProphecyClaim, and relays a tx to Binance
+func (sub BinanceSub) handleERC721BinanceEvent(clientChainID *big.Int, bridgeBankAddress common.Address,
+	contractABI abi.ABI, eventName string, cLog ctypes.Log) error {
+	// Parse the event's attributes via bsccontract ABI
+	event := types.BinanceERC721Event{}
+	err := contractABI.Unpack(&event, eventName, cLog.Data)
+	if err != nil {
+		sub.Logger.Error("error unpacking: %v", err)
+	}
+	event.BridgeBankAddress = bridgeBankAddress
+	event.ChainID = clientChainID
+
+	if eventName == types.LogBurn.String() {
+		event.ClaimType = xcommon.BurnText
+	} else {
+		event.ClaimType = xcommon.LockText
+	}
+	sub.Logger.Info(event.String())
+
+	// Add the event to the record
+	txHash := cLog.TxHash.Hex()
+	types.NewERC721EventWrite(txHash, event)
+
+	tokenURI := event.TokenURI
+	if strings.HasPrefix(tokenURI, event.BaseURI) {
+		tokenURI = tokenURI[len(event.BaseURI):]
+	}
+
+	prophecyClaim := xcommon.BscERC721ProphecyClaim{
+		ClaimType: event.ClaimType,
+		ChainName: event.ChainName,
+		BinanceSender: xcommon.NewBinanceAddress(event.From.Hex()),
+		EthereumReceiver: xcommon.NewEthereumAddress(event.To.Hex()),
+		Symbol: event.Symbol,
+		TokenId: event.TokenId.String(),
+		BaseURI: event.BaseURI,
+		TokenURI: tokenURI,
+		TxHash: txHash,
+	}
+
+	//send claim to EthRelayer
+	_, err = client.SendERC721ProphecyClaimToEthereum(prophecyClaim)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Unpacks a handleLogNewProphecyClaim event, builds a new OracleClaim, and relays it to Ethereum
+func (sub BinanceSub) handleLogERC721NewProphecyClaim(contractABI abi.ABI, eventName string,
+	cLog ctypes.Log) error {
+	// Parse the event's attributes via ethcontract ABI
+	event := types.ProphecyClaimERC721Event{}
+	err := contractABI.Unpack(&event, eventName, cLog.Data)
+	if err != nil {
+		sub.Logger.Error("error unpacking: %v", err)
+	}
+	sub.Logger.Info(event.String())
+
+	oracleClaim, err := txs.ERC721ProphecyClaimToSignedOracleClaim(event, sub.PrivateKey)
+	if err != nil {
+		return err
+	}
+	return txs.RelayOracleClaimToBinance(sub.BscProvider, sub.RegistryContractAddress, types.LogNewProphecyClaim,
 		oracleClaim, sub.PrivateKey)
 }

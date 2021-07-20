@@ -1,0 +1,61 @@
+{
+  "name": "bsc_contracts",
+  "version": "1.1.0",
+  "description": "Dependencies and scripts for Peggy smart contracts",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "big-integer": "^1.6.48",
+    "bignumber.js": "^6.0.0",
+    "bluebird": "^3.5.1",
+    "cross-env": "5.0.5",
+    "dotenv": "^8.1.0",
+    "eth-lib": "^0.2.8",
+    "ethereumjs-util": "^5.2.0",
+    "keccak": "^1.4.0",
+    "lodash": "^4.17.20",
+    "truffle-contract": "^4.0.31",
+    "utf8": "^3.0.0"
+  },
+  "devDependencies": {
+    "@truffle/hdwallet-provider": "^1.0.43",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "ganache-cli": "^6.8.2",
+    "openzeppelin-solidity": "^2.1.3",
+    "truffle": "^5.1.43",
+    "web3": "^1.2.6",
+    "web3-utils": "^1.0.0-beta.52"
+  },
+  "scripts": {
+    "migrate": "npx truffle migrate --reset",
+    "bsc:abi": "node scripts/formatAbi.js",
+    "bsc:address": "npx truffle exec scripts/getBridgeRegistryAddress.js",
+    "bsc:validators": "npx truffle exec scripts/getValidators.js",
+    "bsc:addValidator": "npx truffle exec scripts/addValidator.js",
+    "bsc:hasLocked": "npx truffle exec scripts/hasLockedTokens.js",
+    "bsc:getTx": "npx truffle exec scripts/getTxReceipt.js",
+    "bsc:setup": "npx truffle exec scripts/setOracleAndBridgeBank.js",
+    "bsc:erc20lock": "npx truffle exec scripts/sendERC20LockTx.js",
+    "bsc:erc721lock": "npx truffle exec scripts/sendERC721LockTx.js",
+    "bsc:erc20burn": "npx truffle exec scripts/sendERC20BurnTx.js",
+    "bsc:erc721burn": "npx truffle exec scripts/sendERC721BurnTx.js",
+    "bsc:check": "npx truffle exec scripts/sendCheckProphecy.js",
+    "bsc:process": "npx truffle exec scripts/sendProcessProphecy.js",
+    "bsc:addBridgeToken": "npx truffle exec scripts/sendAddBridgeToken.js",
+    "bsc:getTokenBalance": "npx truffle exec scripts/getTokenBalance.js",
+    "bsc:getStakingPoolAddress": "npx truffle exec scripts/getStakingPoolAddress.js",
+    "bsc:setStakeToken": "npx truffle exec scripts/setStakeToken.js",
+    "bsc:getStakeToken": "npx truffle exec scripts/getStakeTokenAddress.js",
+    "bsc:sendStakeTx": "npx truffle exec scripts/sendStakeTx.js",
+    "bsc:sendTransferTx": "npx truffle exec scripts/transfer.js",
+    "bsctoken:address": "npx truffle exec scripts/getTokenContractAddress.js",
+    "bsctoken:mint": "npx truffle exec scripts/mintTestTokens.js",
+    "bsctoken:approve": "npx truffle exec scripts/sendApproveTx.js"
+  }
+}

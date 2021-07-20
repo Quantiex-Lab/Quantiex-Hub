@@ -27,19 +27,19 @@ var (
 )
 
 // BridgeRegistryABI is the input ABI used to generate the binding from.
-const BridgeRegistryABI = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_quantiexBridge\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_bridgeBank\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_oracle\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_valset\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_stakingPool\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_quantiexBridge\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_bridgeBank\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_oracle\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_valset\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_stakingPool\",\"type\":\"address\"}],\"name\":\"LogContractsRegistered\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"bridgeBank\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"oracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"quantiexBridge\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"stakingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"valset\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
+const BridgeRegistryABI = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_quantiexERC20Bridge\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_quantiexERC721Bridge\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_bridgeERC20Bank\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_bridgeERC721Bank\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_oracle\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_valset\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_stakingPool\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_quantiexERC20Bridge\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_quantiexERC721Bridge\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_bridgeERC20Bank\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_bridgeERC721Bank\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_oracle\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_valset\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_stakingPool\",\"type\":\"address\"}],\"name\":\"LogContractsRegistered\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"bridgeERC20Bank\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"bridgeERC721Bank\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"oracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"quantiexERC20Bridge\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"quantiexERC721Bridge\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"stakingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"valset\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
 // BridgeRegistryBin is the compiled bytecode used for deploying new contracts.
-var BridgeRegistryBin = "0x608060405234801561001057600080fd5b50604051610660380380610660833981810160405260a081101561003357600080fd5b810190808051906020019092919080519060200190929190805190602001909291908051906020019092919080519060200190929190505050846000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555083600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555082600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555081600360006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080600460006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055507fca9bc7c49be61218ce33204e191df8c519a582629c022e5c78c0c98885f1d3676000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600360009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600460009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16604051808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019550505050505060405180910390a150505050506102c0806103a06000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c80630c56ae3b1461005c5780630e41f373146100a65780637dc0d1d0146100f05780637f54af0c1461013a578063bab9acf814610184575b600080fd5b6100646101ce565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100ae6101f4565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100f861021a565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b610142610240565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b61018c610266565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b600460009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600360009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea265627a7a72315820b30defd7716dc5eab279b8f4d9884c40d022d64a9f320634612f4e914c4bbf0b64736f6c63430005110032"
+var BridgeRegistryBin = "0x608060405234801561001057600080fd5b506040516108aa3803806108aa833981810160405260e081101561003357600080fd5b8101908080519060200190929190805190602001909291908051906020019092919080519060200190929190805190602001909291908051906020019092919080519060200190929190505050866000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555085600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555084600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555083600360006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555082600460006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555081600560006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080600660006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055507f626ca7cf58dcae558e83ad85a3cbf2c646a3f55925624c86f40d3b0ab55bf5d96000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600360009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600460009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600560009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600660009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16604051808873ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200197505050505050505060405180910390a1505050505050506103c6806104e46000396000f3fe608060405234801561001057600080fd5b506004361061007d5760003560e01c80637dc0d1d01161005b5780637dc0d1d0146101605780637f54af0c146101aa578063c572e051146101f4578063cd9b07c41461023e5761007d565b80630c56ae3b146100825780633bfdab0a146100cc57806378c0911514610116575b600080fd5b61008a610288565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100d46102ae565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b61011e6102d3565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6101686102f9565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6101b261031f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6101fc610345565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b61024661036b565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b600660009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600460009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600560009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600360009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea265627a7a72315820e252f9474c2b9bcdf0c6689623945dc81aee7d584642513b748c14046cb83eed64736f6c63430005110032"
 
 // DeployBridgeRegistry deploys a new Ethereum contract, binding an instance of BridgeRegistry to it.
-func DeployBridgeRegistry(auth *bind.TransactOpts, backend bind.ContractBackend, _quantiexBridge common.Address, _bridgeBank common.Address, _oracle common.Address, _valset common.Address, _stakingPool common.Address) (common.Address, *types.Transaction, *BridgeRegistry, error) {
+func DeployBridgeRegistry(auth *bind.TransactOpts, backend bind.ContractBackend, _quantiexERC20Bridge common.Address, _quantiexERC721Bridge common.Address, _bridgeERC20Bank common.Address, _bridgeERC721Bank common.Address, _oracle common.Address, _valset common.Address, _stakingPool common.Address) (common.Address, *types.Transaction, *BridgeRegistry, error) {
 	parsed, err := abi.JSON(strings.NewReader(BridgeRegistryABI))
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
 
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(BridgeRegistryBin), backend, _quantiexBridge, _bridgeBank, _oracle, _valset, _stakingPool)
+	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(BridgeRegistryBin), backend, _quantiexERC20Bridge, _quantiexERC721Bridge, _bridgeERC20Bank, _bridgeERC721Bank, _oracle, _valset, _stakingPool)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
@@ -188,30 +188,56 @@ func (_BridgeRegistry *BridgeRegistryTransactorRaw) Transact(opts *bind.Transact
 	return _BridgeRegistry.Contract.contract.Transact(opts, method, params...)
 }
 
-// BridgeBank is a free data retrieval call binding the contract method 0x0e41f373.
+// BridgeERC20Bank is a free data retrieval call binding the contract method 0x78c09115.
 //
-// Solidity: function bridgeBank() view returns(address)
-func (_BridgeRegistry *BridgeRegistryCaller) BridgeBank(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function bridgeERC20Bank() view returns(address)
+func (_BridgeRegistry *BridgeRegistryCaller) BridgeERC20Bank(opts *bind.CallOpts) (common.Address, error) {
 	var (
 		ret0 = new(common.Address)
 	)
 	out := ret0
-	err := _BridgeRegistry.contract.Call(opts, out, "bridgeBank")
+	err := _BridgeRegistry.contract.Call(opts, out, "bridgeERC20Bank")
 	return *ret0, err
 }
 
-// BridgeBank is a free data retrieval call binding the contract method 0x0e41f373.
+// BridgeERC20Bank is a free data retrieval call binding the contract method 0x78c09115.
 //
-// Solidity: function bridgeBank() view returns(address)
-func (_BridgeRegistry *BridgeRegistrySession) BridgeBank() (common.Address, error) {
-	return _BridgeRegistry.Contract.BridgeBank(&_BridgeRegistry.CallOpts)
+// Solidity: function bridgeERC20Bank() view returns(address)
+func (_BridgeRegistry *BridgeRegistrySession) BridgeERC20Bank() (common.Address, error) {
+	return _BridgeRegistry.Contract.BridgeERC20Bank(&_BridgeRegistry.CallOpts)
 }
 
-// BridgeBank is a free data retrieval call binding the contract method 0x0e41f373.
+// BridgeERC20Bank is a free data retrieval call binding the contract method 0x78c09115.
 //
-// Solidity: function bridgeBank() view returns(address)
-func (_BridgeRegistry *BridgeRegistryCallerSession) BridgeBank() (common.Address, error) {
-	return _BridgeRegistry.Contract.BridgeBank(&_BridgeRegistry.CallOpts)
+// Solidity: function bridgeERC20Bank() view returns(address)
+func (_BridgeRegistry *BridgeRegistryCallerSession) BridgeERC20Bank() (common.Address, error) {
+	return _BridgeRegistry.Contract.BridgeERC20Bank(&_BridgeRegistry.CallOpts)
+}
+
+// BridgeERC721Bank is a free data retrieval call binding the contract method 0xc572e051.
+//
+// Solidity: function bridgeERC721Bank() view returns(address)
+func (_BridgeRegistry *BridgeRegistryCaller) BridgeERC721Bank(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _BridgeRegistry.contract.Call(opts, out, "bridgeERC721Bank")
+	return *ret0, err
+}
+
+// BridgeERC721Bank is a free data retrieval call binding the contract method 0xc572e051.
+//
+// Solidity: function bridgeERC721Bank() view returns(address)
+func (_BridgeRegistry *BridgeRegistrySession) BridgeERC721Bank() (common.Address, error) {
+	return _BridgeRegistry.Contract.BridgeERC721Bank(&_BridgeRegistry.CallOpts)
+}
+
+// BridgeERC721Bank is a free data retrieval call binding the contract method 0xc572e051.
+//
+// Solidity: function bridgeERC721Bank() view returns(address)
+func (_BridgeRegistry *BridgeRegistryCallerSession) BridgeERC721Bank() (common.Address, error) {
+	return _BridgeRegistry.Contract.BridgeERC721Bank(&_BridgeRegistry.CallOpts)
 }
 
 // Oracle is a free data retrieval call binding the contract method 0x7dc0d1d0.
@@ -240,30 +266,56 @@ func (_BridgeRegistry *BridgeRegistryCallerSession) Oracle() (common.Address, er
 	return _BridgeRegistry.Contract.Oracle(&_BridgeRegistry.CallOpts)
 }
 
-// QuantiexBridge is a free data retrieval call binding the contract method 0xbab9acf8.
+// QuantiexERC20Bridge is a free data retrieval call binding the contract method 0x3bfdab0a.
 //
-// Solidity: function quantiexBridge() view returns(address)
-func (_BridgeRegistry *BridgeRegistryCaller) QuantiexBridge(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function quantiexERC20Bridge() view returns(address)
+func (_BridgeRegistry *BridgeRegistryCaller) QuantiexERC20Bridge(opts *bind.CallOpts) (common.Address, error) {
 	var (
 		ret0 = new(common.Address)
 	)
 	out := ret0
-	err := _BridgeRegistry.contract.Call(opts, out, "quantiexBridge")
+	err := _BridgeRegistry.contract.Call(opts, out, "quantiexERC20Bridge")
 	return *ret0, err
 }
 
-// QuantiexBridge is a free data retrieval call binding the contract method 0xbab9acf8.
+// QuantiexERC20Bridge is a free data retrieval call binding the contract method 0x3bfdab0a.
 //
-// Solidity: function quantiexBridge() view returns(address)
-func (_BridgeRegistry *BridgeRegistrySession) QuantiexBridge() (common.Address, error) {
-	return _BridgeRegistry.Contract.QuantiexBridge(&_BridgeRegistry.CallOpts)
+// Solidity: function quantiexERC20Bridge() view returns(address)
+func (_BridgeRegistry *BridgeRegistrySession) QuantiexERC20Bridge() (common.Address, error) {
+	return _BridgeRegistry.Contract.QuantiexERC20Bridge(&_BridgeRegistry.CallOpts)
 }
 
-// QuantiexBridge is a free data retrieval call binding the contract method 0xbab9acf8.
+// QuantiexERC20Bridge is a free data retrieval call binding the contract method 0x3bfdab0a.
 //
-// Solidity: function quantiexBridge() view returns(address)
-func (_BridgeRegistry *BridgeRegistryCallerSession) QuantiexBridge() (common.Address, error) {
-	return _BridgeRegistry.Contract.QuantiexBridge(&_BridgeRegistry.CallOpts)
+// Solidity: function quantiexERC20Bridge() view returns(address)
+func (_BridgeRegistry *BridgeRegistryCallerSession) QuantiexERC20Bridge() (common.Address, error) {
+	return _BridgeRegistry.Contract.QuantiexERC20Bridge(&_BridgeRegistry.CallOpts)
+}
+
+// QuantiexERC721Bridge is a free data retrieval call binding the contract method 0xcd9b07c4.
+//
+// Solidity: function quantiexERC721Bridge() view returns(address)
+func (_BridgeRegistry *BridgeRegistryCaller) QuantiexERC721Bridge(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _BridgeRegistry.contract.Call(opts, out, "quantiexERC721Bridge")
+	return *ret0, err
+}
+
+// QuantiexERC721Bridge is a free data retrieval call binding the contract method 0xcd9b07c4.
+//
+// Solidity: function quantiexERC721Bridge() view returns(address)
+func (_BridgeRegistry *BridgeRegistrySession) QuantiexERC721Bridge() (common.Address, error) {
+	return _BridgeRegistry.Contract.QuantiexERC721Bridge(&_BridgeRegistry.CallOpts)
+}
+
+// QuantiexERC721Bridge is a free data retrieval call binding the contract method 0xcd9b07c4.
+//
+// Solidity: function quantiexERC721Bridge() view returns(address)
+func (_BridgeRegistry *BridgeRegistryCallerSession) QuantiexERC721Bridge() (common.Address, error) {
+	return _BridgeRegistry.Contract.QuantiexERC721Bridge(&_BridgeRegistry.CallOpts)
 }
 
 // StakingPool is a free data retrieval call binding the contract method 0x0c56ae3b.
@@ -387,17 +439,19 @@ func (it *BridgeRegistryLogContractsRegisteredIterator) Close() error {
 
 // BridgeRegistryLogContractsRegistered represents a LogContractsRegistered event raised by the BridgeRegistry contract.
 type BridgeRegistryLogContractsRegistered struct {
-	QuantiexBridge common.Address
-	BridgeBank     common.Address
-	Oracle         common.Address
-	Valset         common.Address
-	StakingPool    common.Address
-	Raw            types.Log // Blockchain specific contextual infos
+	QuantiexERC20Bridge  common.Address
+	QuantiexERC721Bridge common.Address
+	BridgeERC20Bank      common.Address
+	BridgeERC721Bank     common.Address
+	Oracle               common.Address
+	Valset               common.Address
+	StakingPool          common.Address
+	Raw                  types.Log // Blockchain specific contextual infos
 }
 
-// FilterLogContractsRegistered is a free log retrieval operation binding the contract event 0xca9bc7c49be61218ce33204e191df8c519a582629c022e5c78c0c98885f1d367.
+// FilterLogContractsRegistered is a free log retrieval operation binding the contract event 0x626ca7cf58dcae558e83ad85a3cbf2c646a3f55925624c86f40d3b0ab55bf5d9.
 //
-// Solidity: event LogContractsRegistered(address _quantiexBridge, address _bridgeBank, address _oracle, address _valset, address _stakingPool)
+// Solidity: event LogContractsRegistered(address _quantiexERC20Bridge, address _quantiexERC721Bridge, address _bridgeERC20Bank, address _bridgeERC721Bank, address _oracle, address _valset, address _stakingPool)
 func (_BridgeRegistry *BridgeRegistryFilterer) FilterLogContractsRegistered(opts *bind.FilterOpts) (*BridgeRegistryLogContractsRegisteredIterator, error) {
 
 	logs, sub, err := _BridgeRegistry.contract.FilterLogs(opts, "LogContractsRegistered")
@@ -407,9 +461,9 @@ func (_BridgeRegistry *BridgeRegistryFilterer) FilterLogContractsRegistered(opts
 	return &BridgeRegistryLogContractsRegisteredIterator{contract: _BridgeRegistry.contract, event: "LogContractsRegistered", logs: logs, sub: sub}, nil
 }
 
-// WatchLogContractsRegistered is a free log subscription operation binding the contract event 0xca9bc7c49be61218ce33204e191df8c519a582629c022e5c78c0c98885f1d367.
+// WatchLogContractsRegistered is a free log subscription operation binding the contract event 0x626ca7cf58dcae558e83ad85a3cbf2c646a3f55925624c86f40d3b0ab55bf5d9.
 //
-// Solidity: event LogContractsRegistered(address _quantiexBridge, address _bridgeBank, address _oracle, address _valset, address _stakingPool)
+// Solidity: event LogContractsRegistered(address _quantiexERC20Bridge, address _quantiexERC721Bridge, address _bridgeERC20Bank, address _bridgeERC721Bank, address _oracle, address _valset, address _stakingPool)
 func (_BridgeRegistry *BridgeRegistryFilterer) WatchLogContractsRegistered(opts *bind.WatchOpts, sink chan<- *BridgeRegistryLogContractsRegistered) (event.Subscription, error) {
 
 	logs, sub, err := _BridgeRegistry.contract.WatchLogs(opts, "LogContractsRegistered")
@@ -444,9 +498,9 @@ func (_BridgeRegistry *BridgeRegistryFilterer) WatchLogContractsRegistered(opts 
 	}), nil
 }
 
-// ParseLogContractsRegistered is a log parse operation binding the contract event 0xca9bc7c49be61218ce33204e191df8c519a582629c022e5c78c0c98885f1d367.
+// ParseLogContractsRegistered is a log parse operation binding the contract event 0x626ca7cf58dcae558e83ad85a3cbf2c646a3f55925624c86f40d3b0ab55bf5d9.
 //
-// Solidity: event LogContractsRegistered(address _quantiexBridge, address _bridgeBank, address _oracle, address _valset, address _stakingPool)
+// Solidity: event LogContractsRegistered(address _quantiexERC20Bridge, address _quantiexERC721Bridge, address _bridgeERC20Bank, address _bridgeERC721Bank, address _oracle, address _valset, address _stakingPool)
 func (_BridgeRegistry *BridgeRegistryFilterer) ParseLogContractsRegistered(log types.Log) (*BridgeRegistryLogContractsRegistered, error) {
 	event := new(BridgeRegistryLogContractsRegistered)
 	if err := _BridgeRegistry.contract.UnpackLog(event, "LogContractsRegistered", log); err != nil {

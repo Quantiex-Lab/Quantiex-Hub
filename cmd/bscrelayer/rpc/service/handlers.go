@@ -10,7 +10,8 @@ import (
 )
 
 func StartHttpServer(s *relayer.BinanceSub) {
-	util.AddHandler("POST", util.ETHEREUM_RELAYPROPHECYCLAIM, HandleRelayProphecyClaim)
+	util.AddHandler("POST", util.RELAY_ETHEREUM_ERC20PROPHECYCLAIM, HandleRelayERC20ProphecyClaim)
+	util.AddHandler("POST", util.RELAY_ETHEREUM_ERC721PROPHECYCLAIM, HandleRelayERC721ProphecyClaim)
 
 	port := rpc.GetConfig().Port
 	util.SetPort(port)
@@ -19,14 +20,26 @@ func StartHttpServer(s *relayer.BinanceSub) {
 	go util.Start()
 }
 
-func HandleRelayProphecyClaim(c echo.Context) error {
-	ethProphecyClaim, err := types.JsonToEthProphecyClaim(c.Request().Body)
+func HandleRelayERC20ProphecyClaim(c echo.Context) error {
+	ethProphecyClaim, err := types.JsonToEthERC20ProphecyClaim(c.Request().Body)
 	if err != nil {
 		glog.Errorf("jsonToClaimType err: %+v", err)
 		return err
 	}
 
-	RelayProphecyClaim(ethProphecyClaim)
+	RelayERC20ProphecyClaim(ethProphecyClaim)
+
+	return nil
+}
+
+func HandleRelayERC721ProphecyClaim(c echo.Context) error {
+	ethProphecyClaim, err := types.JsonToEthERC721ProphecyClaim(c.Request().Body)
+	if err != nil {
+		glog.Errorf("jsonToClaimType err: %+v", err)
+		return err
+	}
+
+	RelayERC721ProphecyClaim(ethProphecyClaim)
 
 	return nil
 }
