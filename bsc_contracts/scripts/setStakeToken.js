@@ -91,7 +91,7 @@ module.exports = async () => {
       });
     // Get event logs
     const setTokenAddressEvent = setTokenAddressLogs.find(e => e.event === "LogSetTokenAddress");
-    console.log("Staking token address:", setTokenAddressEvent.args._token);
+    console.log("Staking token address:", setTokenAddressEvent.args.token);
 
   } catch (error) {
     console.error({error})

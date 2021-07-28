@@ -54,6 +54,8 @@
     "bsc:setStakeToken": "npx truffle exec scripts/setStakeToken.js",
     "bsc:getStakeToken": "npx truffle exec scripts/getStakeTokenAddress.js",
     "bsc:sendStakeTx": "npx truffle exec scripts/sendStakeTx.js",
+    "bsc:revoke": "npx truffle exec scripts/sendRevokeTx.js",
+    "bsc:depositInterestFund": "npx truffle exec scripts/depositInterestFund.js",
     "bsc:sendTransferTx": "npx truffle exec scripts/transfer.js",
     "bsctoken:address": "npx truffle exec scripts/getTokenContractAddress.js",
     "bsctoken:mint": "npx truffle exec scripts/mintTestTokens.js",
