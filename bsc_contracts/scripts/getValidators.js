@@ -1,71 +1,70 @@
 module.exports = async () => {
-    /*******************************************
-     *** Set up
-     ******************************************/
-    require("dotenv").config();
-    const Web3 = require("web3");
-    const HDWalletProvider = require("@truffle/hdwallet-provider");
-    const BigNumber = require("bignumber.js")
+	/*******************************************
+	 *** Set up
+	 ******************************************/
+	require("dotenv").config();
+	const Web3 = require("web3");
+	const HDWalletProvider = require("@truffle/hdwallet-provider");
+	const BigNumber = require("bignumber.js")
 
-    // Contract abstraction
-    const truffleContract = require("truffle-contract");
-    const contract = truffleContract(
-        require("../build/contracts/Valset.json")
-    );
+	// Contract abstraction
+	const truffleContract = require("truffle-contract");
+	const stakingPoolContract = truffleContract(require("../build/contracts/StakingPool.json"));
 
-    /*******************************************
-     *** Constants
-     ******************************************/
-    const NETWORK_ROPSTEN =
-        process.argv[4] === "--network" && process.argv[5] === "ropsten";
-    const NETWORK_BSCDEV =
-        process.argv[4] === "--network" && process.argv[5] === "bscdev";
+	/*******************************************
+	 *** Constants
+	 ******************************************/
+	const NETWORK_BSCDEV =
+		process.argv[4] === "--network" && process.argv[5] === "bscdev";
 
-    /*******************************************
-     *** Web3 provider
-     *** Set contract provider based on --network flag
-     ******************************************/
-    let provider;
-    let operator;
-    if (NETWORK_ROPSTEN || NETWORK_BSCDEV) {
-        provider = new HDWalletProvider(
-            process.env.MNEMONIC,
-            process.env.HDWALLET_PROVIDER
-        );
-        operator = process.env.OPERATOR;
-    } else {
-        provider = new Web3.providers.HttpProvider(process.env.LOCAL_PROVIDER);
-        operator = process.env.LOCAL_OPERATOR;
-    }
+	/*******************************************
+	 *** Web3 provider
+	 *** Set contract provider based on --network flag
+	 ******************************************/
+	let provider;
+	if (NETWORK_BSCDEV) {
+		provider = new HDWalletProvider(
+			process.env.MNEMONIC,
+			process.env.HDWALLET_PROVIDER
+		);
+	} else {
+		provider = new Web3.providers.HttpProvider(process.env.LOCAL_PROVIDER);
+	}
 
-    const web3 = new Web3(provider);
-    contract.setProvider(web3.currentProvider);
-    try {
-        // Get current accounts
-        const accounts = await web3.eth.getAccounts();
+	const web3 = new Web3(provider);
+	stakingPoolContract.setProvider(web3.currentProvider);
 
-        /*******************************************
-         *** Contract interaction
-         ******************************************/
-        await contract.deployed().then(async function (instance) {
-            for (let i = 0; i < accounts.length; i++) {
-                console.log("Trying " + accounts[i] + "...")
-                const isValidator = await instance.isActiveValidator(accounts[i], {
-                    from: operator,
-                    value: 0,
-                    gas: 300000 // 300,000 Gwei
-                });
-                if (isValidator) {
-                    const power = new BigNumber(await instance.getValidatorPower(accounts[i], {
-                        from: operator,
-                        value: 0,
-                        gas: 300000 // 300,000 Gwei
-                    }));
-                    console.log("Validator " + accounts[i] + " is active! Power:", power.c[0])
-                }
-            }
-        });
-    } catch (error) {
-        console.error({ error })
-    }
+	try {
+		/*******************************************
+		 *** Contract interaction
+		 ******************************************/
+		let stakersCount = 0
+		let stakers;
+		await stakingPoolContract.deployed().then(async function (instance) {
+			stakersCount = await instance.stakersCount();
+			stakers = await instance.getTop(stakersCount);
+		});
+
+		if (stakersCount > 0) {
+			for (let i = 0; i < stakersCount; i++) {
+				await stakingPoolContract.deployed().then(async function (instance) {
+					const weight = new BigNumber(await instance.weightOf(stakers[i]));
+					let realWeight = weight.div(new BigNumber(10).pow(18));
+					console.log("Validator:" + stakers[i] + ", Weight:", realWeight.toString(10));
+
+					const times = await instance.getStakeTimes(stakers[i]);
+					for (let idx = 0; idx < times; ++idx) {
+						const record = await instance.getStakeRecord(stakers[i], idx);
+						console.log("-> stake time:", (new BigNumber(record[0])).toString(10), ", balance:",
+							(new BigNumber(record[1])).div(new BigNumber(10).pow(18)).toString(10));
+					}
+				});
+				console.log("");
+			}
+		} else {
+			console.log("No validators.");
+		}
+	} catch (error) {
+		console.error({ error })
+	}
 };

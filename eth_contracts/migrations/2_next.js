@@ -116,7 +116,7 @@ module.exports = function(deployer, network, accounts) {
     // 6. Deploy StakingPool contract:
     //    Gas used:       2,649,300 Gwei
     //    Total cost:     0.052986 Ether
-    await deployer.deploy(StakingPool, operator, {
+    await deployer.deploy(StakingPool, operator, 80, 60, {
       gas: 6721975,
       from: operator
     });

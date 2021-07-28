@@ -7,7 +7,7 @@ module.exports = async () => {
 
 	// Contract abstraction
 	const truffleContract = require("truffle-contract");
-	const valSetContract = truffleContract(
+	const stakingPoolContract = truffleContract(
 		require("../build/contracts/StakingPool.json")
 	);
 	const erc20TokenContract = truffleContract(
@@ -48,14 +48,14 @@ module.exports = async () => {
 	/*******************************************
 	 *** Stake transaction parameters
 	 ******************************************/
-	let ethSender = "";
+	let sender = "";
 	let amount = "";
 
 	if (NETWORK_ROPSTEN || NETWORK_DEVELOP || NETWORK_ETHDEV) {
-		ethSender = process.argv[6];
+		sender = process.argv[6];
 		amount = process.argv[7];
 	} else {
-		ethSender = process.argv[4];
+		sender = process.argv[4];
 		amount = process.argv[5];
 	}
 
@@ -79,7 +79,7 @@ module.exports = async () => {
 	}
 
 	const web3 = new Web3(provider);
-	valSetContract.setProvider(web3.currentProvider);
+	stakingPoolContract.setProvider(web3.currentProvider);
 	erc20TokenContract.setProvider(web3.currentProvider);
 	
 	try {
@@ -90,7 +90,7 @@ module.exports = async () => {
 
 		{
 			//get stake token address
-			const tokenAddress = await valSetContract.deployed().then(function(instance) {
+			const tokenAddress = await stakingPoolContract.deployed().then(function(instance) {
 				return instance.tokenAddress();
 			});
 			if (tokenAddress === NULL_ADDRESS) {
@@ -100,14 +100,14 @@ module.exports = async () => {
 			console.log("Stake token address: ", tokenAddress, "\n");
 
 			// Send approve transaction
-			const stakingPoolAddress = await valSetContract.deployed().then(function(instance) {
+			const stakingPoolAddress = await stakingPoolContract.deployed().then(function(instance) {
 				return instance.address;
 			});
 
-			let instance = await erc20TokenContract.at(tokenAddress)
+			let instance = await erc20TokenContract.at(tokenAddress);
 			const { logs } = await instance.approve(stakingPoolAddress, _amount, {
 				chainId: 5777,
-				from: ethSender,
+				from: sender,
 				value: 0,
 				gas: 300000 // 300,000 Gwei
 			});
@@ -128,30 +128,28 @@ module.exports = async () => {
 		}
 
 		// Send stake transaction
-		console.log("Connecting to ValSet contract....");
-		const { logs } = await valSetContract.deployed().then(function (instance) {
-			console.log("Connected to ValSet contract, sending stake...");
-			return instance.stake(_amount, {
+		console.log("Connecting to StakingPool contract....");
+		const { logs } = await stakingPoolContract.deployed().then(function(instance) {
+			console.log("Call depositInterestFund...");
+			return instance.depositInterestFund(_amount, {
 				chainId: 5777,
-				from: ethSender,
+				from: sender,
 				value: 0,
 				gas: 300000 // 300,000 Gwei
 			});
 		});
 
-		console.log("Sent stake...");
-
 		// Get event logs
-		const event = logs.find(e => e.event === "LogStake");
+		const event = logs.find(e => e.event === "LogDepositInterestFund");
 
 		// Parse event fields
-		const stakeEvent = {
-			staker: event.args.staker,
+		const depositEvent = {
+			sender: event.args.sender,
 			amount: Number(event.args.amount),
-			balance: Number(event.args.balance)
+			interestFund: Number(event.args.interestFund)
 		};
-		console.log(stakeEvent);
-
+		console.log(depositEvent);
+		
 	} catch (error) {
 		console.error({ error });
 	}

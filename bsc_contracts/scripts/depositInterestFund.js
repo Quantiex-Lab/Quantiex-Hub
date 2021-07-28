@@ -10,7 +10,7 @@ module.exports = async () => {
 	const stakingPoolContract = truffleContract(
 		require("../build/contracts/StakingPool.json")
 	);
-	const tokenContract = truffleContract(
+	const erc20TokenContract = truffleContract(
 		require("../build/contracts/BridgeERC20Token.json")
 	);
 
@@ -20,10 +20,8 @@ module.exports = async () => {
 	 *** Constants
 	 ******************************************/
 	// Config values
-	const NETWORK_DEVELOP =
-		process.argv[4] === "--network" && process.argv[5] === "develop";
-	const NETWORK_BSCDEV =
-		process.argv[4] === "--network" && process.argv[5] === "bscdev";
+	const NETWORK_DEVELOP = process.argv[4] === "--network" && process.argv[5] === "develop";
+	const NETWORK_BSCDEV = process.argv[4] === "--network" && process.argv[5] === "bscdev";
 	const NUM_ARGS = process.argv.length - 4;
 
 	/*******************************************
@@ -34,28 +32,25 @@ module.exports = async () => {
 	 ******************************************/
 	if (NETWORK_DEVELOP || NETWORK_BSCDEV) {
 		if (NUM_ARGS !== 4) {
-			return console.error(
-				"Error: invalid number of parameters, please try again."
-			);
+			return console.error("Error: invalid number of parameters, please try again.");
 		}
 	} else {
 		if (NUM_ARGS !== 2) {
-			return console.error(
-				"Error: must specify sender address, and amount."
-			);
+			return console.error("Error: invalid number of parameters, please try again.");
 		}
 	}
 
 	/*******************************************
 	 *** Stake transaction parameters
 	 ******************************************/
-	let ethSender = "";
+	let sender = "";
 	let amount = "";
+
 	if (NETWORK_DEVELOP || NETWORK_BSCDEV) {
-		ethSender = process.argv[6];
+		sender = process.argv[6];
 		amount = process.argv[7];
 	} else {
-		ethSender = process.argv[4];
+		sender = process.argv[4];
 		amount = process.argv[5];
 	}
 
@@ -75,75 +70,78 @@ module.exports = async () => {
 
 	const web3 = new Web3(provider);
 	stakingPoolContract.setProvider(web3.currentProvider);
-	tokenContract.setProvider(web3.currentProvider);
+	erc20TokenContract.setProvider(web3.currentProvider);
+	
 	try {
 		/*******************************************
 		 *** Contract interaction
 		 ******************************************/
 		let _amount = web3.utils.toWei(amount)
 
-		//get stake token address
-		const tokenAddress = await stakingPoolContract.deployed().then(function(instance) {
-			return instance.tokenAddress();
-		});
-		if (tokenAddress === NULL_ADDRESS) {
-			console.log("Stake token address is NULL.");
-			return;
+		{
+			//get stake token address
+			const tokenAddress = await stakingPoolContract.deployed().then(function(instance) {
+				return instance.tokenAddress();
+			});
+			if (tokenAddress === NULL_ADDRESS) {
+				console.log("Stake token address is NULL.");
+				return;
+			}
+			console.log("Stake token address: ", tokenAddress, "\n");
+
+			// Send approve transaction
+			const stakingPoolAddress = await stakingPoolContract.deployed().then(function(instance) {
+				return instance.address;
+			});
+
+			let instance = await erc20TokenContract.at(tokenAddress);
+			const { logs } = await instance.approve(stakingPoolAddress, _amount, {
+				chainId: 5777,
+				from: sender,
+				value: 0,
+				gas: 300000 // 300,000 Gwei
+			});
+
+			console.log("Sent approval...");
+
+			// Get event logs
+			const approveEvent = logs.find(e => e.event === "Approval");
+
+			// Parse event fields
+			const approveLog = {
+				owner: approveEvent.args.owner,
+				spender: approveEvent.args.spender,
+				value: Number(approveEvent.args.value)
+			};
+
+			console.log(approveLog);
 		}
-		console.log("Stake token address: ", tokenAddress, "\n");
-
-		// Send approve transaction
-		const stakingPoolAddress = await stakingPoolContract.deployed().then(function(instance) {
-			return instance.address;
-		});
-		console.log("staking pool address: ", stakingPoolAddress, "\n");
-
-		let instance = await tokenContract.at(tokenAddress)
-		const { logs: approveLogs } = await instance.approve(stakingPoolAddress, _amount, {
-			from: ethSender,
-			value: 0,
-			gas: 300000 // 300,000 Gwei
-		});
-
-		console.log("Sent approval...");
-
-		// Get event logs
-		const approveEvent = approveLogs.find(e => e.event === "Approval");
-
-		// Parse event fields
-		const approveLog = {
-			owner: approveEvent.args.owner,
-			spender: approveEvent.args.spender,
-			value: Number(approveEvent.args.value)
-		};
-
-		console.log(approveLog);
 
 		// Send stake transaction
-		console.log("Connecting to contract....");
-		const { logs: stakeLogs } = await stakingPoolContract.deployed().then(function (instance) {
-			console.log("Connected to contract, sending stake...");
-			return instance.stake(_amount, {
-				from: ethSender,
+		console.log("Connecting to StakingPool contract....");
+		const { logs } = await stakingPoolContract.deployed().then(function(instance) {
+			console.log("Call depositInterestFund...");
+			return instance.depositInterestFund(_amount, {
+				chainId: 5777,
+				from: sender,
 				value: 0,
 				gas: 300000 // 300,000 Gwei
 			});
 		});
 
-		console.log("Sent stake...");
-
 		// Get event logs
-		const statkeEvent = stakeLogs.find(e => e.event === "LogStake");
+		const event = logs.find(e => e.event === "LogDepositInterestFund");
 
 		// Parse event fields
-		const stakeLog = {
-			staker: statkeEvent.args.staker,
-			amount: Number(statkeEvent.args.amount),
-			balance: Number(statkeEvent.args.balance)
+		const depositEvent = {
+			sender: event.args.sender,
+			amount: Number(event.args.amount),
+			interestFund: Number(event.args.interestFund)
 		};
-		console.log(stakeLog);
-
+		console.log(depositEvent);
+		
 	} catch (error) {
 		console.error({ error });
 	}
+	return;
 };
