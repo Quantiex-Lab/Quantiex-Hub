@@ -63,7 +63,7 @@ module.exports = async () => {
 					for (let idx = 0; idx < times; ++idx) {
 						const record = await instance.getStakeRecord(stakers[i], idx);
 						console.log("-> stake time:", (new BigNumber(record[0])).toString(10), ", balance:",
-							(new BigNumber(record[1])).div(new BigNumber(10).pow(18)).toString(10));
+							new BigNumber(record[1]).div(new BigNumber(10).pow(18)).toString(10));
 					}
 				});
 				console.log("");
